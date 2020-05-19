@@ -76,7 +76,7 @@ export default {
     getInitialDays: months => {
       Axios.get(
         // "http://192.168.1.155:5000/months?_sort=date:DESC"
-        "/months.json"
+        "/Nonchalance/months.json"
       ).then(response => {
         for (const month of response.data) {
           month.days.sort((a, b) => Moment(b.date) - Moment(a.date));
@@ -92,7 +92,7 @@ export default {
         }
       });
     },
-    scroll(months) {
+    /*scroll(months) {
       window.onscroll = () => {
         const bottomOfWindow =
           document.documentElement.scrollTop + window.innerHeight ===
@@ -108,7 +108,7 @@ export default {
           });
         }
       };
-    },
+    },*/
     formatDay: dateString => {
       const date = new Date(dateString);
       const dtf = new Intl.DateTimeFormat("en-US", {

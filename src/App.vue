@@ -10,7 +10,7 @@
           alt="Nonchalance Logo"
           class="shrink mr-2"
           contain
-          src="/nonchalance.svg"
+          src="/Nonchalance/nonchalance.svg"
           transition="scale-transition"
           width="40"
         />
