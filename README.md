@@ -1,24 +1,7 @@
-# timeline-of-nonchalance
+# Welcome to the Nonchalance Timeline
 
-## Project setup
-```
-npm install
-```
+This site is an interactive timeline of Nonchalance. This timeline covers all of the Nonchalance Universe. This includes but is not limited to the New Noology Network, the Jejune Institute, Dispatches from Elsewhere, and the Latitude Society.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Timeline Credit
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+The timeline's core design was made by [Jones Joseph](https://codepen.io/jo_Geek) in their project [here](https://codepen.io/jo_Geek/pen/NLoGZZ).
