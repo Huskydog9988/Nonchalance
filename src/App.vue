@@ -1,28 +1,63 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+      <div class="d-flex align-center">
+        <v-img
+          alt="Nonchalance Logo"
+          class="shrink mr-2"
+          contain
+          src="/nonchalance.svg"
+          transition="scale-transition"
+          width="40"
+        />
+        <span class="mr-2">Nonchalance Timeline</span>
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <Settings v-bind:story="story" />
+      
+    </v-app-bar>
+
+    <v-content class="px-6">
+      <notifications group="copy" position="bottom right"/>
+      <Timeline v-bind:story="story"/>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// <v-btn
+//   href="https://discord.gg/MCPZQ39"
+//   target="_blank"
+//   text
+// >
+//   <span class="mr-2">Discord</span>
+//   <v-icon>mdi-open-in-new</v-icon>
+// </v-btn>
+import Timeline from "./components/Timeline";
+import Settings from "./components/Settings";
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  components: {
+    Timeline,
+    Settings
+  },
+
+  data: () => ({
+    story: {
+      DispatchesFromElsewhere: true,
+      NewNoologyNetwork: true,
+      JejuneInstitute: true,
+      LatitudeSociety: true,
+      Spoilers: true
+    }
+  }),
+};
+</script>
