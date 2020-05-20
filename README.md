@@ -1,6 +1,6 @@
 # Welcome to the Nonchalance Timeline
 
-This site is an interactive timeline of Nonchalance. This timeline covers all of the Nonchalance Universe. This includes but is not limited to the New Noology Network, the Jejune Institute, Dispatches from Elsewhere, and the Latitude Society.
+[This site](https://huskydog9988.github.io/Nonchalance/) is an interactive timeline of Nonchalance. This timeline covers all of the Nonchalance Universe. This includes but is not limited to the New Noology Network, the Jejune Institute, Dispatches from Elsewhere, and the Latitude Society.
 
 ## Timeline Credit
 
