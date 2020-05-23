@@ -22,7 +22,7 @@
               <div class="box-content">
                 <!-- If outsides links -->
                 <div v-if="event.outSideLinks">
-                  <EventLink v-bind:eventLink="createLink(event.id)" />
+                  <EventLink :eventLink="createLink(event.id)" />
                   <v-btn
                     tile
                     x-small
@@ -35,7 +35,7 @@
                 </div>
                 <!-- If no outside links -->
                 <div v-else>
-                  <EventLink v-bind:eventLink="createLink(event.id)" />
+                  <EventLink :eventLink="createLink(event.id)" />
                 </div>
                 <div class="box-item" v-html="Marked(event.description)"></div>
               </div>
@@ -67,29 +67,23 @@ export default {
   data: () => {
     return {
       months: [],
+      backup: [],
       Marked,
       Moment
     };
   },
   methods: {
     // https://alligator.io/vuejs/implementing-infinite-scroll/
-    getInitialDays: months => {
+    getInitialDays: function (months) {
+      const link = process.env.NODE_ENV === 'production' ? '/Nonchalance/months.json' : '/months.json' // "http://192.168.1.155:5000/months?_sort=date:DESC"
       Axios.get(
-        // "http://192.168.1.155:5000/months?_sort=date:DESC"
-        "/Nonchalance/months.json"
+        link
       ).then(response => {
         for (const month of response.data) {
           month.days.sort((a, b) => Moment(b.date) - Moment(a.date));
-          /*month.days.sort(function(a,b){
-            // Turn your strings into dates, and then subtract them
-            // to get a value that is either negative, positive, or zero.
-            //return new Date(b.date) - new Date(a.date);
-            const dateA = new Date(a.date).getTime(); 
-            const dateB = new Date(b.date).getTime(); 
-            return dateA > dateB ? -1 : 1; 
-          });*/
           months.push(month);
         }
+        this.$emit('isLoading', false);
       });
     },
     /*scroll(months) {

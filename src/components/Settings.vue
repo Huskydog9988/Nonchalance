@@ -56,13 +56,7 @@
 
           <v-btn bottom x-small text absolute left>Updated: 19/5/2020</v-btn>
           <v-btn text @click="menu = false">Cancel</v-btn>
-          <v-btn
-            light
-            color="blue lighten-1"
-            text
-            v-on:click="$emit('sort')"
-            @click="menu = false"
-          >Sort</v-btn>
+          <v-btn light color="blue lighten-1" text v-on:click="sort()" @click="menu = false">Sort</v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>
@@ -75,6 +69,12 @@ export default {
   props: ["story"],
   data: () => ({
     menu: false
-  })
+  }),
+  methods: {
+    sort: function() {
+      this.$emit("isLoading", true);
+      this.$emit("sort", this.story);
+    }
+  }
 };
 </script>
