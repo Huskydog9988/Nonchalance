@@ -10,5 +10,6 @@ module.exports = {
       new BundleAnalyzerPlugin()
     ],
   },
+  publicPath: process.env.NODE_ENV === "production" ? "/Nonchalance/" : "/",
   productionSourceMap: false
 }
