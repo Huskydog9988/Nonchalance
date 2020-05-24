@@ -22,7 +22,7 @@
 
 <script>
 //<span>Copied link to event</span>
-import Vue from 'vue';
+const vue = () => import("vue");
 
 export default {
   name: "EventLink",
@@ -30,7 +30,7 @@ export default {
   data: () => {
     return {
       copied: false,
-      notify: Vue.notify
+      notify: vue.notify
     };
   },
   methods: {

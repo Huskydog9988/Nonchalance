@@ -9,7 +9,7 @@
       <!-- Month Content -->
       <!-- Day Start -->
       <div class="timeline-section" v-for="day of month.days" :key="day.id">
-        <div class="timeline-date">{{Moment(day.date).format('dddd[,] Do')}}</div>
+        <div class="timeline-date">{{format(new Date(day.date), "eeee, do")}}</div>
         <!-- Day Content -->
         <div class="row">
           <!-- Day Content Item Start -->
@@ -38,7 +38,17 @@
                 </div>
                 <div class="box-item" v-html="Marked(event.description)"></div>
               </div>
-              <div class="box-footer"></div>
+              <div v-if="stories(event.stories).length > 0" class="box-footer">
+                <p style="display: inline;">
+                  <b>Stories:</b>
+                </p>
+                <p
+                  style="display: inline;"
+                  v-for="eventStory in stories(event.stories)"
+                  :key="eventStory"
+                >{{eventStory}}</p>
+              </div>
+              <div v-else class="box-footer"></div>
             </div>
           </div>
           <!-- Day Content Item End -->
@@ -51,15 +61,15 @@
 </template>
 
 <script>
-import Axios from "axios";
+import { get } from "axios";
 import Marked from "marked";
-import Moment from "moment";
+import format from "date-fns/format";
 
 import EventLink from "./EventLink";
 
 export default {
   name: "Timeline",
-  props: ["story"],
+  props: ["story", "shouldSort"],
   components: {
     EventLink
   },
@@ -68,47 +78,110 @@ export default {
       months: [],
       backup: [],
       Marked,
-      Moment
+      format
     };
+  },
+  watch: {
+
   },
   methods: {
     // https://alligator.io/vuejs/implementing-infinite-scroll/
-    getInitialDays: function (months) {
-      const link = process.env.NODE_ENV === 'production' ? '/Nonchalance/months.json' : '/months.json' // "http://192.168.1.155:5000/months?_sort=date:DESC"
-      Axios.get(
-        link
-      ).then(response => {
+    getInitialDays: function() {
+      const link =
+        process.env.NODE_ENV === "production"
+          ? "/Nonchalance/months.json"
+          : "/months.json"; // "http://192.168.1.155:5000/months?_sort=date:DESC"
+      get(link).then(response => {
         for (const month of response.data) {
-          month.days.sort((a, b) => Moment(b.date) - Moment(a.date));
-          months.push(month);
+          this.months.push(month);
         }
-        this.$emit('isLoading', false);
+        this.$emit("isLoading", false);
       });
     },
-    formatDay: dateString => {
-      const date = new Date(dateString);
-      const dtf = new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
+    sort: function() {
+      //If nothing is set to false or being "sorted"
+      if (
+        this.story.DispatchesFromElsewhere &&
+        this.story.NewNoologyNetwork &&
+        this.story.JejuneInstitute &&
+        this.story.LatitudeSociety &&
+        this.story.Spoilers &&
+        this.story.Crystore
+      )
+        return;
+
+      const link =
+        process.env.NODE_ENV === "production"
+          ? "/Nonchalance/months.json"
+          : "/months.json"; // "http://192.168.1.155:5000/months?_sort=date:DESC"
+      this.months.length = 0; // Clear array
+
+      get(link).then(response => {
+        for (const month of response.data) {
+          this.sortMonth(month);
+        }
+        this.$emit("isLoading", false);
       });
-      const [
-        { value: month },
-        ,
-        { value: day },
-        ,
-        { value: year }
-      ] = dtf.formatToParts(date);
-      console.log(dateString);
-      console.log(`${month} ${day}, ${year}`);
-      return `${month} ${day}, ${year}`;
+    },
+    sortMonth: function(month) {
+      const days = [];
+
+      for (const day of month.days) {
+        const events = [];
+
+        for (const eventItem of day.event) {
+          if (
+            !this.story.DispatchesFromElsewhere &&
+            eventItem.stories.DispatchesFromElsewhere
+          )
+            continue;
+          if (
+            !this.story.NewNoologyNetwork &&
+            eventItem.stories.NewNoologyNetwork
+          )
+            continue;
+          if (!this.story.JejuneInstitute && eventItem.stories.JejuneInstitute)
+            continue;
+          if (!this.story.LatitudeSociety && eventItem.stories.LatitudeSociety)
+            continue;
+          if (!this.story.Spoilers && eventItem.stories.Spoilers) continue;
+          if (!this.story.Crystore && eventItem.stories.Crystore) continue;
+
+          events.push(eventItem);
+        }
+
+        if (events.length > 0) {
+          days.push(day);
+        }
+      }
+
+      if (days.length > 0) {
+        this.months.push(month);
+      }
     },
     createLink: id => {
       return `localhost:8080#${id}`;
+    },
+    stories: story => {
+      const stories = [];
+      for (const item of Object.keys(story)) {
+        if (
+          item === "_id" ||
+          item === "id" ||
+          item === "createdAt" ||
+          item === "updatedAt"
+        )
+          continue;
+        if (story[item]) {
+          stories.push(item);
+        }
+        // console.log(item);
+      }
+      return stories;
     }
   },
   beforeMount() {
-    this.getInitialDays(this.months);
+    this.getInitialDays();
   }
 };
 </script>

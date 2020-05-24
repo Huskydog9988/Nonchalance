@@ -1,7 +1,14 @@
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 module.exports = {
-  outputDir: "./docs",
+  outputDir: './docs',
   "transpileDependencies": [
     "vuetify"
   ],
-  publicPath: process.env.NODE_ENV === 'production' ? '/Nonchalance/' : '/'
+  configureWebpack: {
+    plugins: [
+      new BundleAnalyzerPlugin()
+    ],
+  },
+  productionSourceMap: false
 }

@@ -15,14 +15,13 @@
 
       <v-spacer></v-spacer>
 
-      <Settings v-on:sort="sort()" v-on:isLoading="isLoading = $event" :story="story" />
+      <Settings v-on:sort="sort($event)" v-on:isLoading="isLoading = $event" :story="story" />
     </v-app-bar>
 
     <v-content class="px-6">
       <notifications group="copy" position="bottom right" />
-      <!-- <Loading v-if="loading" class="center"/> -->
       <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="isFullPage" />
-      <Timeline v-on:isLoading="isLoading = $event" :story="story" />
+      <Timeline v-on:isLoading="isLoading = $event" :story="story" :shouldSort="shouldSort" />
     </v-content>
 
     <Footer/>
@@ -30,12 +29,12 @@
 </template>
 
 <script>
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css"; //Loading component CSS
+const Loading = () => import("vue-loading-overlay");
+//import "vue-loading-overlay/dist/vue-loading.css"; //Loading component CSS
 
-import Timeline from "./components/Timeline";
-import Settings from "./components/Settings";
-import Footer from "./components/Footer";
+import Timeline from "./components/TimelineIF";
+const Settings = () => import("./components/Settings");
+const Footer = () => import("./components/Footer");
 // import Loading from "./components/Loading";
 
 export default {
@@ -48,12 +47,14 @@ export default {
   },
   data: () => ({
     story: {
+      Crystore: true,
       DispatchesFromElsewhere: true,
       NewNoologyNetwork: true,
       JejuneInstitute: true,
       LatitudeSociety: true,
       Spoilers: true
     },
+    shouldSort: false,
     isLoading: true,
     isFullPage: true,
     logoPath:
@@ -62,16 +63,10 @@ export default {
         : "/nonchalance.svg"
   }),
   methods: {
-    sort: function() {}
+    sort: function(story) {
+      this.shouldSort = true;
+      this.story = story;
+    }
   }
 };
 </script>
-
-<style>
-.center {
-  margin: auto;
-  position: absolute;
-  width: 50%;
-  /* height: 50%; */
-}
-</style>

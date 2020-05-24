@@ -17,6 +17,13 @@
 
           <v-list-item>
             <v-list-item-action>
+              <v-switch v-model="story.Crystore" color="blue lighten-1"></v-switch>
+            </v-list-item-action>
+            <v-list-item-title>Crystore</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-action>
               <v-switch v-model="story.DispatchesFromElsewhere" color="blue lighten-1"></v-switch>
             </v-list-item-action>
             <v-list-item-title>Dispatches from Elsewhere</v-list-item-title>
