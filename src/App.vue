@@ -15,13 +15,17 @@
 
       <v-spacer></v-spacer>
 
-      <Settings v-on:sort="sort($event)" v-on:isLoading="isLoading = $event" :story="story" />
+      <Settings :eventBus="eventBus" v-on:isLoading="isLoading = $event" />
+      <Info />
     </v-app-bar>
 
     <v-content class="px-6">
+      <v-overlay :value="isLoading">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
+ 
       <notifications group="copy" position="bottom right" />
-      <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="isFullPage" />
-      <Timeline v-on:isLoading="isLoading = $event" :story="story" :shouldSort="shouldSort" />
+      <Timeline v-on:isLoading="isLoading = $event" :eventBus="eventBus" />
     </v-content>
 
     <Footer/>
@@ -29,11 +33,11 @@
 </template>
 
 <script>
-const Loading = () => import("vue-loading-overlay");
-//import "vue-loading-overlay/dist/vue-loading.css"; //Loading component CSS
+import Vue from "vue";
 
-import Timeline from "./components/TimelineIF";
-const Settings = () => import("./components/Settings");
+import Timeline from "./components/Timeline";
+import Settings from "./components/Settings";
+import Info from "./components/Info";
 const Footer = () => import("./components/Footer");
 // import Loading from "./components/Loading";
 
@@ -42,31 +46,21 @@ export default {
   components: {
     Timeline,
     Settings,
-    Footer,
-    Loading
+    Info,
+    Footer
   },
   data: () => ({
-    story: {
-      Crystore: true,
-      DispatchesFromElsewhere: true,
-      NewNoologyNetwork: true,
-      JejuneInstitute: true,
-      LatitudeSociety: true,
-      Spoilers: true
-    },
-    shouldSort: false,
     isLoading: true,
-    isFullPage: true,
     logoPath:
       process.env.NODE_ENV === "production"
         ? "/Nonchalance/nonchalance.svg"
-        : "/nonchalance.svg"
+        : "/nonchalance.svg",
+    eventBus: new Vue(),
   }),
   methods: {
-    sort: function(story) {
-      this.shouldSort = true;
-      this.story = story;
-    }
+    // runSort() {
+    //   this.eventBus.$emit('sort')
+    // }
   }
 };
 </script>
