@@ -1,11 +1,12 @@
 import Vue from 'vue'
-import Notifications from 'vue-notification'
+import VueClipboard from 'vue-clipboard2'
 
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
 
-Vue.use(Notifications)
 Vue.config.productionTip = false
+
+Vue.use(VueClipboard);
 
 new Vue({
   vuetify,
@@ -19,7 +20,10 @@ new Vue({
       Spoilers: true
     },
     live: false,
+    Commentary: true,
     debug: false,
+    showDates: true,
+    lastPublishDate: "July 6, 2020"
   }),
   beforeMount() {
     if (localStorage.getItem('story')) {
@@ -32,10 +36,11 @@ new Vue({
 
     if (localStorage.getItem('asorted')) {
       try {
-        const parsed = JSON.parse(localStorage.getItem('story'));
+        const parsed = JSON.parse(localStorage.getItem('asorted'));
       
         this.live = parsed.live;
         this.debug = parsed.debug;
+        this.showDates = parsed.showDates;
       } catch(e) {
         localStorage.removeItem('asorted');
       }
@@ -46,6 +51,7 @@ new Vue({
 
       const live = this.live;
       const debug = this.debug;
+      const showDates = this.showDates;
       
       // Save story
       const parsedStory = JSON.stringify(this.story);
@@ -54,7 +60,8 @@ new Vue({
       // Save asorted
       const parsedAsorted = JSON.stringify({
         live,
-        debug
+        debug,
+        showDates
       });
       localStorage.setItem('asorted', parsedAsorted);
     },

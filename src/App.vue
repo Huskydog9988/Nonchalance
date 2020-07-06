@@ -15,20 +15,20 @@
 
       <v-spacer></v-spacer>
 
+      <Sort :eventBus="eventBus" v-on:isLoading="isLoading = $event" />
       <Settings :eventBus="eventBus" v-on:isLoading="isLoading = $event" />
       <Info />
     </v-app-bar>
 
-    <v-content class="px-6">
+    <v-main class="px-6">
       <v-overlay :value="isLoading">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
- 
-      <notifications group="copy" position="bottom right" />
-      <Timeline v-on:isLoading="isLoading = $event" :eventBus="eventBus" />
-    </v-content>
 
-    <Footer/>
+      <Timeline v-on:isLoading="isLoading = $event" :eventBus="eventBus" />
+    </v-main>
+
+    <Footer />
   </v-app>
 </template>
 
@@ -36,15 +36,16 @@
 import Vue from "vue";
 
 import Timeline from "./components/Timeline";
+import Sort from "./components/Sort";
 import Settings from "./components/Settings";
 import Info from "./components/Info";
 const Footer = () => import("./components/Footer");
-// import Loading from "./components/Loading";
 
 export default {
   name: "App",
   components: {
     Timeline,
+    Sort,
     Settings,
     Info,
     Footer
@@ -56,11 +57,33 @@ export default {
         ? "/Nonchalance/nonchalance.svg"
         : "/nonchalance.svg",
     eventBus: new Vue(),
+    scrolledTo: false
   }),
   methods: {
     // runSort() {
     //   this.eventBus.$emit('sort')
     // }
+  },
+  watch: {
+    isLoading: function (val) {
+      if (!this.scrolledTo && !val) {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        if (!urlParams.has("event")) return;
+
+        const event = urlParams.get('event');
+        setTimeout(function(){
+          const element = document.getElementById(event);
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }, 2000);
+
+        // console.log(event)
+      }
+    }
   }
 };
 </script>

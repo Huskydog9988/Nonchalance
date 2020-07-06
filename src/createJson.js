@@ -13,6 +13,7 @@ Axios.get(
             if (isBefore(new Date(b.date), new Date(a.date))) return -1;
             return 1;
         });
+        console.log(month.name);
         months.push(month);
     }
     const json = JSON.stringify(months);
@@ -21,5 +22,6 @@ Axios.get(
         if (err){
             console.log(err);
         }
+        console.log("Wrote to file");
     });
 });

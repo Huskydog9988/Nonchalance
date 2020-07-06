@@ -37,30 +37,13 @@
   <meta name="application-name" content="Nonchalance Timeline">
   <meta name="msapplication-TileColor" content="#00aba9">
   <meta name="theme-color" content="#ffffff">
-
-  <!-- clipboard libray -->
-  <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
 </head>
 
 <body>
   <noscript>
-    <strong>We're sorry but our timeline and site doesn't work at all without JavaScript enabled. Please enable it, we
-      guarantee it is worth while.</strong>
+    <strong>We're sorry but our timeline and site doesn't work without JavaScript enabled. Please enable JavaScript to continue using our site.</strong>
   </noscript>
   <div id="app"></div>
-  <script>
-    var clipboard = new ClipboardJS(".link");
-
-    clipboard.on("success", function (e) {
-      //console.log(e);
-      // alert("Copied the link to the event!");
-    });
-
-    clipboard.on("error", function (e) {
-      console.log(e);
-      // alert("Failed to copy link.");
-    });
-  </script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167210069-1"></script>
   <script>

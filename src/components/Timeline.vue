@@ -9,6 +9,14 @@
       <!-- Month Content -->
       <!-- Day Start -->
       <div class="timeline-section" v-for="day of month.days" :key="day.id">
+        <!-- <v-responsive> -->
+        <!-- <v-lazy
+            v-model="day.id"
+            :options="{
+              threshold: .5
+            }"
+            transition="fade-transition"
+        >-->
         <div class="timeline-date">{{format(new Date(day.date.concat(" 00:00")), "eeee, do")}}</div>
         <!-- Day Content -->
         <div class="row">
@@ -22,25 +30,31 @@
               <div class="box-content">
                 <!-- If outsides links -->
                 <div v-if="event.outSideLinks">
-                  <EventLink :eventLink="createLink(event.id)"/>
+                  <Commentary v-if="event.commentary" />
+                  <Bridge v-if="event.Bridge" :bridge="event.Bridge" />
+                  <EventLink :eventLink="createLink(event.id)" />
                   <v-btn
                     tile
                     x-small
                     v-for="link of Object.keys(event.outSideLinks)"
                     :key="link"
+                    color="blue-grey darken-4"
                     target="_blank"
                     :href="event.outSideLinks[link]"
                   >{{link}}</v-btn>
                 </div>
                 <!-- If no outside links -->
                 <div v-else>
+                  <Commentary v-if="event.commentary" />
+                  <Bridge v-if="event.Bridge" :bridge="event.Bridge" />
                   <EventLink :eventLink="createLink(event.id)" />
                 </div>
-                <div class="box-item" v-html="Marked(event.description)"></div>
+                <div class="box-item" v-html="event.description"></div>
               </div>
-              <div v-if="stories(event.stories).length > 0 && $root.debug" class="box-footer">
+              <div v-if="$root.debug" class="box-footer">
+                <p v-if="$root.showDates" style="display: inline;">{{day.date}}</p>
                 <p style="display: inline;">
-                  <b>Stories: </b>
+                  <b> Stories: </b>
                 </p>
                 <p
                   style="display: inline;"
@@ -48,12 +62,16 @@
                   :key="eventStory"
                 >{{eventStory}} </p>
               </div>
-              <div v-else class="box-footer"></div>
+              <div v-else class="box-footer">
+                <p v-if="$root.showDates" style="display: inline;">{{day.date}}</p>
+              </div>
             </div>
           </div>
           <!-- Day Content Item End -->
         </div>
         <!-- Day Content End -->
+        <!-- </v-lazy> -->
+        <!-- </v-responsive> -->
       </div>
       <!-- Day End -->
     </div>
@@ -61,25 +79,29 @@
 </template>
 
 <script>
-import { get } from "axios";
+// import {get} from "axios";
 import Marked from "marked";
 import format from "date-fns/format";
 import isBefore from "date-fns/isBefore";
 // const isBefore = () => import("date-fns/isBefore");
 
 import EventLink from "./EventLink";
+import Bridge from "./Bridge";
+// import Commentary from "./Commentary";
 
 export default {
   name: "Timeline",
   props: ["story", "eventBus"],
   components: {
-    EventLink
+    EventLink,
+    Bridge,
+    Commentary: () => import("./Commentary")
   },
   data: () => {
     return {
       months: [],
       // backup: [],
-      Marked,
+      // Marked,
       format
     };
   },
@@ -88,13 +110,13 @@ export default {
     timelineInit: function() {
       // If nothing is set to false or being "sorted"
       if (
+        !this.$root.live && // If set to false, don't sort
         this.$root.story.DispatchesFromElsewhere &&
         this.$root.story.NewNoologyNetwork &&
         this.$root.story.JejuneInstitute &&
         this.$root.story.LatitudeSociety &&
         this.$root.story.Spoilers &&
-        this.$root.story.Crystore &&
-        !this.$root.live // If set to false, don't sort
+        this.$root.story.Crystore
       ) {
         this.timelineUnsorted(); //this.timelineInit();
       } else {
@@ -102,47 +124,94 @@ export default {
       }
     },
     timelineUnsorted() {
-      console.log("timelineUnsorted");
+      // console.log("timelineUnsorted");
       // this.months.length = 0; // Clear array
-      this.months = []
+      this.months = [];
 
       // const link =
       //   process.env.NODE_ENV === "production"
       //     ? "/Nonchalance/months.json"
       //     : "/months.json";
-      const link = process.env.NODE_ENV === "production" ? "/Nonchalance/months.json" : "/months.json";
+      const url =
+        process.env.NODE_ENV === "production"
+          ? "/Nonchalance/months.json"
+          : "/months.json";
 
-      get(link).then(response => {
-        for (const month of response.data) {
-          this.months.push(month);
-        }
-        this.$emit("isLoading", false);
-      });
+      // Axios({
+      //   method: "get",
+      //   url: url, // Safari fix
+      //   withCredentials: false
+      // }).then(response => {
+      //   for (const month of response.data) {
+      //     this.months.push(month);
+      //   }
+      //   this.$emit("isLoading", false);
+      // });
+
+      // get(url).then(response => {
+      //   for (const month of response.data) {
+      //     this.months.push(month);
+      //   }
+      //   this.$emit("isLoading", false);
+      // });
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          for (const month of data) {
+            this.months.push(month);
+          }
+          this.$emit("isLoading", false);
+        });
     },
     timelineSorted() {
-      console.log("timelineSorted");
+      // console.log("timelineSorted");
       // Sort
 
       // this.months.length = 0; // Clear array
-      this.months = []
+      this.months = [];
 
       // const link =
       //   process.env.NODE_ENV === "production"
       //     ? "/Nonchalance/months.json"
       //     : "/months.json";
-      let link;
+      let url;
       if (this.$root.live) {
-        link = "https://nonchalance-dashbaord.herokuapp.com/months?_sort=date:DESC,days.date:DESC"
+        url =
+          "https://nonchalance-dashbaord.herokuapp.com/months?_sort=date:DESC,days.date:DESC";
       } else {
-        link = process.env.NODE_ENV === "production" ? "/Nonchalance/months.json" : "/months.json";
+        url =
+          process.env.NODE_ENV === "production"
+            ? "/Nonchalance/months.json"
+            : "/months.json";
       }
 
-      get(link).then(response => {
-        for (const month of response.data) {
-          this.sortMonth(month);
-        }
-        this.$emit("isLoading", false);
-      });
+      // Axios({
+      //   method: "get",
+      //   url: url, // Safari fix
+      //   withCredentials: false
+      // }).then(response => {
+      //   for (const month of response.data) {
+      //     this.months.push(month);
+      //   }
+      //   this.$emit("isLoading", false);
+      // });
+
+      // get(url).then(response => {
+      //   for (const month of response.data) {
+      //     this.sortMonth(month);
+      //   }
+      //   this.$emit("isLoading", false);
+      // });
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          for (const month of data) {
+            this.sortMonth(month);
+          }
+          this.$emit("isLoading", false);
+        });
     },
     sortMonth: function(month) {
       const days = [];
@@ -151,6 +220,10 @@ export default {
         const events = [];
 
         for (const eventItem of day.event) {
+          if (!this.$root.story.Spoilers && eventItem.stories.Spoilers)
+            continue;
+          if (!this.$root.Commentary && eventItem.Commentary) continue;
+
           if (
             !this.$root.story.DispatchesFromElsewhere &&
             eventItem.stories.DispatchesFromElsewhere
@@ -161,12 +234,23 @@ export default {
             eventItem.stories.NewNoologyNetwork
           )
             continue;
-          if (!this.$root.story.JejuneInstitute && eventItem.stories.JejuneInstitute)
+          if (
+            !this.$root.story.JejuneInstitute &&
+            eventItem.stories.JejuneInstitute
+          )
             continue;
-          if (!this.$root.story.LatitudeSociety && eventItem.stories.LatitudeSociety)
+          if (
+            !this.$root.story.LatitudeSociety &&
+            eventItem.stories.LatitudeSociety
+          )
             continue;
-          if (!this.$root.story.Spoilers && eventItem.stories.Spoilers) continue;
-          if (!this.$root.story.Crystore && eventItem.stories.Crystore) continue;
+
+          if (!this.$root.story.Crystore && eventItem.stories.Crystore)
+            continue;
+
+          if (this.$root.live) {
+            eventItem.description = Marked(eventItem.description)
+          }
 
           events.push(eventItem);
         }
@@ -180,7 +264,6 @@ export default {
       }
 
       if (days.length > 0) {
-
         days.sort((a, b) => {
           if (isBefore(new Date(b.date), new Date(a.date))) return -1;
           return 1;
@@ -193,7 +276,9 @@ export default {
       }
     },
     createLink: id => {
-      return process.env.NODE_ENV === "production" ? `https://huskydog9988.github.io/Nonchalance/#${id}` : `localhost:8080#${id}`;
+      return process.env.NODE_ENV === "production"
+        ? `https://huskydog9988.github.io/Nonchalance/?event=${id}`
+        : `localhost:8080?event=${id}`;
     },
     stories: story => {
       const stories = [];
@@ -214,14 +299,14 @@ export default {
       return stories;
     }
   },
-  beforeMount() {
+  created() {
     this.timelineInit();
-    this.eventBus.$on('sort', () => {
+    this.eventBus.$on("sort", () => {
       this.timelineInit();
     });
-  },
+  }
   // ready() {
-    
+
   // }
 };
 </script>
@@ -239,17 +324,25 @@ input[type="reset"] {
   outline: inherit;
 }
 
+:root {
+  --color-link: 255, 0, 0;
+}
+
+.lighten {
+  filter: brightness(200%);
+} 
+
 .text-info {
-  color:#5bc0de
+  color: #5bc0de;
 }
 .text-warning {
-  color:#f89406
+  color: #f89406;
 }
 .text-danger {
-  color:#ee5f5b
+  color: #ee5f5b;
 }
 .text-success {
-  color:#62c462
+  color: #62c462;
 }
 
 .timeline {
