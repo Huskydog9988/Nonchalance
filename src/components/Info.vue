@@ -15,6 +15,10 @@
             <v-list-item-title>{{$root.lastPublishDate}}</v-list-item-title>
           </v-list-item>
           <v-list-item>
+            <v-list-item-subtitle class="text-wrap">Version:</v-list-item-subtitle>
+            <v-list-item-title>{{$root.timelineVersion}}</v-list-item-title>
+          </v-list-item>
+          <v-list-item>
             <v-list-item-subtitle>Contributors:</v-list-item-subtitle>
             <v-list-item-title class="text-wrap">Huskydog9988, pinklemonlies, Argonaute, and Orra.</v-list-item-title>
           </v-list-item>
