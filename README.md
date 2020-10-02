@@ -15,6 +15,9 @@
 
 > An interactive timeline of Nonchalance. From the New Noology Network, to the Jejune Institute, and everything else.
 
+## Deprication
+Timeline was depricated due to the creation of an offical timeline on [crystore](https://www.crystoreinc.com/).
+
 ### 🏠 [Homepage](https://huskydog9988.github.io/Nonchalance/)
 
 ## Prerequisites
