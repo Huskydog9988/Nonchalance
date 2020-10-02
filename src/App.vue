@@ -21,6 +21,15 @@
     </v-app-bar>
 
     <v-main class="px-6">
+      <v-alert v-model="alert" type="warning" dark dense dismissible close-text="Close Warning"
+        >This timeline has been deprecated. Please refer to
+        <strong
+          ><a style="color: white;" href="https://www.crystoreinc.com/"
+            >crystoreinc.com</a
+          ></strong
+        >
+        for the offical timeline.</v-alert
+      >
       <v-overlay :value="isLoading">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
@@ -48,7 +57,7 @@ export default {
     Sort,
     Settings,
     Info,
-    Footer
+    Footer,
   },
   data: () => ({
     isLoading: true,
@@ -57,7 +66,8 @@ export default {
         ? "/Nonchalance/nonchalance.svg"
         : "/nonchalance.svg",
     eventBus: new Vue(),
-    scrolledTo: false
+    scrolledTo: false,
+    alert: true,
   }),
   methods: {
     // runSort() {
@@ -65,25 +75,25 @@ export default {
     // }
   },
   watch: {
-    isLoading: function (val) {
+    isLoading: function(val) {
       if (!this.scrolledTo && !val) {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
 
         if (!urlParams.has("event")) return;
 
-        const event = urlParams.get('event');
-        setTimeout(function(){
+        const event = urlParams.get("event");
+        setTimeout(function() {
           const element = document.getElementById(event);
           element.scrollIntoView({
             behavior: "smooth",
-            block: "center"
+            block: "center",
           });
         }, 2000);
 
         // console.log(event)
       }
-    }
-  }
+    },
+  },
 };
 </script>

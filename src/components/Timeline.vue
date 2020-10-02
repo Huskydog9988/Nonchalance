@@ -49,7 +49,7 @@
                   <Bridge v-if="event.Bridge" :bridge="event.Bridge" />
                   <EventLink :eventLink="createLink(event.id)" />
                 </div>
-                <div class="box-item" v-html="event.description"></div>
+                <div class="box-item" v-html="sanitizer(event.description)"></div>
               </div>
               <div v-if="$root.debug" class="box-footer">
                 <p v-if="$root.showDates" style="display: inline;">{{day.date}}</p>
@@ -83,6 +83,7 @@
 import Marked from "marked";
 import format from "date-fns/format";
 import isBefore from "date-fns/isBefore";
+import dompurify from 'dompurify';
 // const isBefore = () => import("date-fns/isBefore");
 
 import EventLink from "./EventLink";
@@ -102,7 +103,8 @@ export default {
       months: [],
       // backup: [],
       // Marked,
-      format
+      format,
+      sanitizer: dompurify.sanitize
     };
   },
   methods: {

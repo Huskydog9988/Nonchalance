@@ -1,12 +1,12 @@
 {
-  "name": "timeline-of-nonchalance",
-  "version": "0.1.0",
+  "name": "nonchalance",
+  "version": "2.2.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "createJson": "node src/createJson.js"
+    "pullLiveData": "node src/pullLiveData.js"
   },
   "license": "GPL-3.0-or-later",
   "author": {
@@ -23,7 +23,9 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "date-fns": "^2.14.0",
+    "dompurify": "^2.0.12",
     "marked": "^1.1.0",
+    "oboe": "^2.1.5",
     "vue": "^2.6.11",
     "vue-clipboard2": "^0.3.1",
     "vue-router": "^3.3.4",

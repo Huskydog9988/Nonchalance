@@ -24,7 +24,7 @@ new Vue({
     debug: false,
     showDates: true,
     lastPublishDate: "July 6, 2020",
-    timelineVersion: "2.1.1"
+    timelineVersion: "2.2.0"
   }),
   beforeMount() {
     if (localStorage.getItem('story')) {
