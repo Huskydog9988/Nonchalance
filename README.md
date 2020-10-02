@@ -6,7 +6,7 @@
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="https://github.com/Huskydog9988/Nonchalance/graphs/commit-activity" target="_blank">
-    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
+    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-no-green.svg" />
   </a>
   <a href="https://github.com/Huskydog9988/Nonchalance/blob/master/LICENSE" target="_blank">
     <img alt="License: GPL--3.0--or--later" src="https://img.shields.io/github/license/Huskydog9988/Nonchalance" />
